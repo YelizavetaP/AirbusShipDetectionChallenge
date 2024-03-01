@@ -18,7 +18,7 @@ from keras.losses import binary_crossentropy
 # Parameters
 BATCH_SIZE = 16             # Train batch size
 EDGE_CROP = 16               # While building the model
-NB_EPOCHS =  10                # Training epochs
+NB_EPOCHS =  5                # Training epochs
 GAUSSIAN_NOISE = 0.1           # To be used in a layer in the model
 UPSAMPLE_MODE = 'DECONV'       # SIMPLE ==> UpSampling2D, else Conv2DTranspose
 NET_SCALING = None             # Downsampling inside the network                        
@@ -307,7 +307,7 @@ if __name__ == "__main__":
 
     # Preparing Callbacks 
     # Best model weights
-    weight_path="{}_weights_16bs_15e.best.hdf5".format('seg_model')
+    weight_path="{}_weights_16bs_5e.best.hdf5".format('seg_model')
 
     # Monitor validation dice coeff and save the best model weights
     checkpoint = ModelCheckpoint(weight_path, monitor='val_dice_coef', verbose=1, 

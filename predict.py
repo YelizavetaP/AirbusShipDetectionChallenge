@@ -38,14 +38,12 @@ def dice_coef_loss(y_true, y_pred):
     return 1 - dice_coef(y_true, y_pred)
 
 
+# Load the model and weights
 model = load_model("seg_model.h5", compile=False)
 model.compile(loss=dice_coef_loss, optimizer='adam', metrics=dice_coef)
-model.load_weights('seg_model_weights.best.hdf5')
+model.load_weights('seg_model_weights_16bs_5e.best.hdf5')
 
 prediction = np.squeeze(model.predict(image), axis=0)
-
-print(prediction.shape)
-print(originalimg.shape)
 
 show(originalimg, prediction)
 
