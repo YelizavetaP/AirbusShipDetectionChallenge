@@ -8,7 +8,7 @@ Data balanced using undersampling to have enouph images with different amount of
 TO RUN:
 You need to change path to train imgs and masks in TRAIN_IMAGE_DIR and  CSV_PATH in the beggining of main function
 
-FUNCTIONS:
+MAIN FUNCTIONS:
 
 splitTrainValid(masks) - removes corupted images and returns train/valid splits
 
@@ -31,7 +31,7 @@ TO USE:
 Change path to test images TEST_IMAGE_DIR
 Have saved model and weights is the same folder
 
-FUNCTIONS:
+MAIN FUNCTIONS:
 normilize(test_df, TEST_IMAGE_DIR) - normilizes pixels of input images so their valus are in range 0 to 1
 
 def rle_encode_ones(x) - RLE encoding for predicted mask to include only values of '1'
