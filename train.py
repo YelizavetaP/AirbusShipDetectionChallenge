@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import keras.backend as K
+import tensorflow as tf
 
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import ImageDataGenerator
@@ -15,11 +16,11 @@ from keras.losses import binary_crossentropy
 
 
 # Parameters
-BATCH_SIZE = 4                 # Train batch size
-EDGE_CROP = 16                 # While building the model
-NB_EPOCHS = 5                  # Training epochs
+BATCH_SIZE = 16             # Train batch size
+EDGE_CROP = 16               # While building the model
+NB_EPOCHS =  15                # Training epochs
 GAUSSIAN_NOISE = 0.1           # To be used in a layer in the model
-UPSAMPLE_MODE = 'SIMPLE'       # SIMPLE ==> UpSampling2D, else Conv2DTranspose
+UPSAMPLE_MODE = 'DECONV'       # SIMPLE ==> UpSampling2D, else Conv2DTranspose
 NET_SCALING = None             # Downsampling inside the network                        
 IMG_SCALING = (1, 1)           # Downsampling in preprocessing
 VALID_IMG_COUNT = 400          # Valid batch size
@@ -239,23 +240,15 @@ def buildUnetModel(input_shape):
     return seg_model
 
 
-# Dice coefficient
+
 def dice_coef(y_true, y_pred, smooth=1):
-    
-    intersection = K.sum(y_true * y_pred, axis=[1,2,3]  )                         # int = y_true ∩ y_pred
-    union = K.sum(y_true, axis=[1,2,3]) + K.sum(y_pred, axis=[1,2,3])           # un = y_true_flatten ed ∪ y_pred_flattened
-    
-    return K.mean( (2. * intersection + smooth) / (union + smooth), axis=0)     # dice = 2 * int + 1 / un + 1
+    y_true_f = tf.cast(tf.keras.backend.flatten(y_true), tf.float32)
+    y_pred_f = tf.keras.backend.flatten(y_pred)
+    intersection = tf.keras.backend.sum(y_true_f * y_pred_f)
+    return (2. * intersection + smooth) / (tf.keras.backend.sum(y_true_f) + tf.keras.backend.sum(y_pred_f) + smooth)
 
-
-# Dice with BCE
-def dice_p_bce(y_true, y_pred):
-
-    combo_loss = "Something"
-         
-    return combo_loss
-
-
+def dice_coef_loss(y_true, y_pred):
+    return 1 - dice_coef(y_true, y_pred)
 
 
 
@@ -284,9 +277,9 @@ if __name__ == "__main__":
 
     # Augmenting Data
     # Preparing image data generator arguments
-    dg_args = dict(rotation_range = 15,         # Degree range for random rotations
-                horizontal_flip = True,         # Randomly flips the inputs horizontally
-                vertical_flip = True,           # Randomly flips the inputs vertically
+    dg_args = dict(rotation_range = 15,         
+                horizontal_flip = True,         
+                vertical_flip = True,           
                 data_format = 'channels_last')  # channels_last refer to (batch, height, width, channels)
     
     image_gen = ImageDataGenerator(**dg_args)
@@ -309,7 +302,7 @@ if __name__ == "__main__":
     print(model.summary())
 
     # Compile model
-    model.compile(optimizer=Adam(1e-4, decay=1e-6), loss=dice_p_bce, metrics=[dice_coef])
+    model.compile(optimizer=Adam(1e-4, decay=1e-6), loss=dice_coef_loss, metrics=[dice_coef])
 
 
     # Preparing Callbacks 
@@ -348,7 +341,7 @@ if __name__ == "__main__":
     
     # Save the weights to load it later for test data 
     model.load_weights(weight_path)
-    model.save('seg_model.h5')
+    model.save('seg_model.h5', include_optimizer=False)
 
 
 
