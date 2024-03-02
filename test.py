@@ -61,8 +61,8 @@ if __name__ == "__main__":
     TEST_IMAGE_DIR = "../data/test_v2"
 
     test = os.listdir(TEST_IMAGE_DIR)
-    normilized_imgs = normilize(test[:100:1], TEST_IMAGE_DIR)
-    # normilized_imgs = normilize(test, TEST_IMAGE_DIR)
+    # normilized_imgs = normilize(test[:100:1], TEST_IMAGE_DIR)
+    normilized_imgs = normilize(test, TEST_IMAGE_DIR)
 
 
     
