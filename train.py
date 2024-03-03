@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import keras.backend as K
 import tensorflow as tf
+import sys
 
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import ImageDataGenerator
@@ -11,7 +12,6 @@ from keras.callbacks import ModelCheckpoint, LearningRateScheduler, EarlyStoppin
 
 from skimage.io import imread                        
 from keras.optimizers.legacy import Adam
-from keras.losses import binary_crossentropy
                
 
 
@@ -255,9 +255,17 @@ def dice_coef_loss(y_true, y_pred):
 
 if __name__ == "__main__":
 
-    TRAIN_IMAGE_DIR = "../data/train_v2"
-    CSV_PATH = "../data/train_ship_segmentations_v2.csv"
+    if len(sys.argv) < 4:
 
+        TRAIN_IMAGE_DIR = "../data/train_v2"
+        CSV_PATH = "../data/train_ship_segmentations_v2.csv"
+        NB_EPOCHS = 5
+
+    else: 
+
+        TRAIN_IMAGE_DIR = sys.argv[1]
+        CSV_PATH = sys.argv[2]
+        NB_EPOCHS = sys.argv[3]
 
 
     train = os.listdir(TRAIN_IMAGE_DIR)
@@ -307,7 +315,7 @@ if __name__ == "__main__":
 
     # Preparing Callbacks 
     # Best model weights
-    weight_path="{}_weights_16bs_5e.best.hdf5".format('seg_model')
+    weight_path="{}_weights.best.hdf5".format('seg_model')
 
     # Monitor validation dice coeff and save the best model weights
     checkpoint = ModelCheckpoint(weight_path, monitor='val_dice_coef', verbose=1, 

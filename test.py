@@ -4,6 +4,7 @@ from skimage.io import imread
 import tensorflow as tf            
 import numpy as np
 import os
+import sys
 import pandas as pd
 
 # normilize all input imgs 
@@ -58,35 +59,48 @@ def rle_encode_ones(x):
 
 if __name__ == "__main__":
 
-    TEST_IMAGE_DIR = "../data/test_v2"
+
+
+    if len(sys.argv) < 2:
+
+        TEST_IMAGE_DIR = "../data/test_v2"
+        MODEL_PATH = "seg_model.h5"
+        WEIGHTS_PATH = 'seg_model_weights_16bs_5e.best.hdf5'
+
+    else: 
+
+        TEST_IMAGE_DIR = sys.argv[1]
+        MODEL_PATH = sys.argv[2]
+        WEIGHTS_PATH = sys.argv[3]
+
+
+
 
     test = os.listdir(TEST_IMAGE_DIR)
-    # normilized_imgs = normilize(test[:100:1], TEST_IMAGE_DIR)
-    normilized_imgs = normilize(test, TEST_IMAGE_DIR)
+    normilized_imgs = normilize(test[:100:1], TEST_IMAGE_DIR)
+    # normilized_imgs = normilize(test, TEST_IMAGE_DIR)
 
 
     
-    model = load_model("seg_model.h5", compile=False)
+    model = load_model(MODEL_PATH, compile=False)
     model.compile(loss=dice_coef_loss, optimizer='adam', metrics=dice_coef)
-    model.load_weights('seg_model_weights_16bs_5e.best.hdf5')
+    model.load_weights(WEIGHTS_PATH)
 
     df = pd.DataFrame(columns=['ImageId', 'EncodedPixels'])
 
     for id, img in zip(test, normilized_imgs):
-        print('1')
+        # using model to get mask?
         prediction = np.squeeze(model.predict(img), axis=0)
-        print(prediction.shape, type(prediction))
-        print(id)
 
-
+        # encoding mask
         rle_mask = rle_encode_ones(prediction)
         rle_str = [str(elem) for elem in rle_mask]
         rle_str = ' '.join(rle_str)
+
         if len(rle_str) == 0: 
             rle_str = np.NaN
-            print(rle_str)
         
-
+        
         df = df._append({'ImageId': id, 'EncodedPixels': rle_str}, ignore_index=True)
 
 
