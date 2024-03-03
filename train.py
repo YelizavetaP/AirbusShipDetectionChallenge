@@ -1,14 +1,13 @@
 import os
 import numpy as np
 import pandas as pd
-import keras.backend as K
 import tensorflow as tf
 import sys
 
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import ImageDataGenerator
 from keras import models, layers
-from keras.callbacks import ModelCheckpoint, LearningRateScheduler, EarlyStopping, ReduceLROnPlateau
+from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 
 from skimage.io import imread                        
 from keras.optimizers.legacy import Adam
