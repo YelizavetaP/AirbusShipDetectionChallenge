@@ -265,7 +265,7 @@ if __name__ == "__main__":
 
         TRAIN_IMAGE_DIR = sys.argv[1]
         CSV_PATH = sys.argv[2]
-        NB_EPOCHS = sys.argv[3]
+        NB_EPOCHS = int(sys.argv[3])
 
 
     train = os.listdir(TRAIN_IMAGE_DIR)
