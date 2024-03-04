@@ -77,8 +77,8 @@ if __name__ == "__main__":
 
 
     test = os.listdir(TEST_IMAGE_DIR)
-    normilized_imgs = normilize(test[:100:1], TEST_IMAGE_DIR)
-    # normilized_imgs = normilize(test, TEST_IMAGE_DIR)
+    # normilized_imgs = normilize(test[:100:1], TEST_IMAGE_DIR)
+    normilized_imgs = normilize(test, TEST_IMAGE_DIR)
 
 
     
