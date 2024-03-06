@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
 
 
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 4:
 
         TEST_IMAGE_DIR = "../data/test_v2"
         MODEL_PATH = "seg_model.h5"
