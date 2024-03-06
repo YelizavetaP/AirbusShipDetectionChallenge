@@ -4,7 +4,7 @@
 
 ## Overview
 
-This project is a solution for Kaggle Airbus Ship Detection Challenge using the U-Net model architecture along with custom loss functions and metrics, specifically Dice score. The solution is divided into two main files: one for model training and another for inference. In addition to training the model on the entire dataset and performing inference on the test data, you can also use the trained model to predict segmentation masks for individual images using.
+This project is a solution for Kaggle Airbus Ship Detection Challenge using the U-Net model architecture along with custom loss functions and metrics, specifically Dice score. The solution is divided into two main files: one for model training and another for inference. In addition to training the model on the entire dataset and performing inference on the test data, you can also use the trained model to predict segmentation masks for individual images using `predict.py`.
 
 
 ## Files & Instructions for Use
